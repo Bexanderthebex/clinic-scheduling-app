@@ -1,6 +1,7 @@
 package models
 
 type Specialization struct {
-	Id                 uint
+	Id                 int
+	UniqueCode         string
 	SpecializationName string
 }
