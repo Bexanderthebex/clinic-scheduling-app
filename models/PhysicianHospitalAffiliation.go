@@ -8,10 +8,9 @@ import (
 
 type PhysicianHospitalAffiliation struct {
 	gorm.Model
-	Id                   uint
-	PhysicianId          string
-	HospitalId           string
-	StartDate            time.Time
-	EndDate              time.Time
-	HospitalAffiliations []PhysicianHospitalAffiliation `gorm:"many2many:PhysicianHospitalAffiliation"`
+	Id          uint
+	PhysicianId string
+	HospitalId  string
+	StartDate   time.Time
+	EndDate     time.Time
 }

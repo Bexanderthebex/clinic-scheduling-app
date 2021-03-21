@@ -9,4 +9,5 @@ type Physician struct {
 	LastName        string
 	MiddleName      string
 	Specializations []*Specialization `gorm:"many2many:PhysicianSpecialization;"`
+	Hospitals       []*Hospital       `gorm:"many2many:PhysicianHospitalAffiliation;"`
 }
