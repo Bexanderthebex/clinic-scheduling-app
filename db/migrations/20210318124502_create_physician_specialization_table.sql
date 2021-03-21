@@ -2,7 +2,7 @@
 CREATE TABLE PhysicianSpecialization (
     Id INT PRIMARY KEY,
     PhysicianId uuid,
-    Specialization INT
+    SpecializationId INT
 );
 
 -- migrate:down
