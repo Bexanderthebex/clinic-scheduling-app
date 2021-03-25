@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/config"
+	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
 	gin "github.com/gin-gonic/gin"
 	"log"
 )
@@ -11,6 +12,8 @@ func main() {
 	if errorFindingConfig != nil {
 		log.Fatal(errorFindingConfig)
 	}
+
+	repository.NewConnection()
 
 	route := gin.Default()
 
