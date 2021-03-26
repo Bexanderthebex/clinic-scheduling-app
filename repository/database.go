@@ -16,6 +16,7 @@ import (
 	"log"
 )
 
+// TODO: it is not the function's responsibility to figure out where the session info is
 func createSecretCache() (*secretcache.Cache, error) {
 	return secretcache.New(
 		func(cache *secretcache.Cache) {
@@ -50,8 +51,6 @@ func NewConnection() (*gorm.DB, error) {
 		log.Fatalln(errorGettingSSMSecret)
 	}
 
-	log.Println(secretKey)
-
 	var databaseConfig DatabaseConfig
 	err := json.Unmarshal([]byte(secretKey), &databaseConfig)
 
@@ -70,3 +69,5 @@ func NewConnection() (*gorm.DB, error) {
 		&gorm.Config{},
 	)
 }
+
+func ConfigureConnectionPool() {}

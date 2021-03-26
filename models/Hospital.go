@@ -1,5 +1,7 @@
 package models
 
+import "github.com/Bexanderthebex/clinic-scheduling-app/physician"
+
 type Hospital struct {
 	Id         string `gorm:"primaryKey"`
 	Name       string
@@ -8,5 +10,5 @@ type Hospital struct {
 	Lat        float64
 	Long       float64
 	Logo       string
-	Physicians []*Physician `gorm:"many2many:PhysicianHospitalAffiliation;"`
+	Physicians []*physician.Physician `gorm:"many2many:PhysicianHospitalAffiliation;"`
 }

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/Bexanderthebex/clinic-scheduling-app/physician"
 	"gorm.io/gorm"
 	"time"
 )
@@ -12,5 +13,5 @@ type Qualification struct {
 	QualificationName string
 	InstituteName     string
 	ProcurementYear   time.Time
-	Physician         Physician `gorm:"foreignKey:PhysicianId"`
+	Physician         physician.Physician `gorm:"foreignKey:PhysicianId"`
 }
