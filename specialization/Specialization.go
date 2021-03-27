@@ -1,4 +1,4 @@
-package models
+package specialization
 
 import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/physician"

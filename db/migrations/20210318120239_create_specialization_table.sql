@@ -1,9 +1,9 @@
 -- migrate:up
-CREATE TABLE Specialization (
-    Id INT PRIMARY KEY,
-    UniqueCode uuid,
-    SpecializationName varchar(100)
+CREATE TABLE specializations (
+    id INT PRIMARY KEY,
+    unique_code uuid,
+    specialization_name varchar(100)
 );
 
 -- migrate:down
-DROP TABLE Specialization;
+DROP TABLE specializations;

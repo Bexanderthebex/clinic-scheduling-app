@@ -13,9 +13,8 @@ type Request struct {
 }
 
 type Response struct {
-	StatusCode uint
-	Message    string
-	Data       *physician.Physician
+	Data  *physician.Physician
+	Error error
 }
 
 func Signup(db *gorm.DB, req *Request) *Response {
@@ -29,8 +28,7 @@ func Signup(db *gorm.DB, req *Request) *Response {
 	physician.Create(db, newPhysician)
 
 	return &Response{
-		StatusCode: 200,
-		Message:    "Physician successfully created",
-		Data:       newPhysician,
+		Data:  newPhysician,
+		Error: nil,
 	}
 }

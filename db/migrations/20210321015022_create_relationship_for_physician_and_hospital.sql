@@ -1,13 +1,13 @@
 -- migrate:up
-ALTER TABLE PhysicianHospitalAffiliation
-    ADD CONSTRAINT FK_PhysicianHospitalAffiliation_PhysicianId
-        FOREIGN KEY (PhysicianId)
-            REFERENCES Physician (id),
-    ADD CONSTRAINT FK_PhysicianHospitalAffiliation_HospitalId
-        FOREIGN KEY (HospitalId)
-            REFERENCES Hospital (id);
+ALTER TABLE physician_hospitals
+    ADD CONSTRAINT fk_physician_hospitals_physician_id
+        FOREIGN KEY (physician_id)
+            REFERENCES physicians (id),
+    ADD CONSTRAINT fk_physician_hospitals_hospital_id
+        FOREIGN KEY (hospital_id)
+            REFERENCES hospitals (id);
 
 -- migrate:down
-ALTER TABLE PhysicianHospitalAffiliation
-    DROP CONSTRAINT FK_PhysicianHospitalAffiliation_PhysicianId,
-    DROP CONSTRAINT FK_PhysicianHospitalAffiliation_HospitalId;
+ALTER TABLE physician_hospitals
+    DROP CONSTRAINT fk_physician_hospitals_physician_id,
+    DROP CONSTRAINT fk_physician_hospitals_hospital_id;

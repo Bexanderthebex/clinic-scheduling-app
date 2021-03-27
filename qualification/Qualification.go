@@ -1,4 +1,4 @@
-package models
+package qualification
 
 import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/physician"

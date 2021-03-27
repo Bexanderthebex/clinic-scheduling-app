@@ -1,4 +1,4 @@
-package models
+package hospital
 
 import "github.com/Bexanderthebex/clinic-scheduling-app/physician"
 

@@ -1,9 +1,9 @@
 -- migrate:up
-CREATE TABLE PhysicianSpecialization (
-    Id INT PRIMARY KEY,
-    PhysicianId uuid,
-    SpecializationId INT
+CREATE TABLE physician_specializations (
+    id INT PRIMARY KEY,
+    physician_id uuid,
+    specialization_id INT
 );
 
 -- migrate:down
-DROP TABLE PhysicianSpecialization;
+DROP TABLE physician_specializations;

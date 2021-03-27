@@ -1,13 +1,13 @@
 -- migrate:up
-ALTER TABLE PhysicianSpecialization
-    ADD CONSTRAINT FK_PhysicianSpecialization_PhysicianId
-        FOREIGN KEY (PhysicianId)
-        REFERENCES Physician (id),
-    ADD CONSTRAINT FK_PhysicianSpecialization_SpecializationId
-        FOREIGN KEY (SpecializationId)
-        REFERENCES Specialization (id);
+ALTER TABLE physician_specializations
+    ADD CONSTRAINT fk_physician_specializations_physician_id
+        FOREIGN KEY (physician_id)
+        REFERENCES physicians (id),
+    ADD CONSTRAINT fk_physician_specializations_specialization_id
+        FOREIGN KEY (specialization_id)
+        REFERENCES specializations (id);
 
 -- migrate:down
-ALTER TABLE PhysicianSpecialization
-    DROP CONSTRAINT FK_PhysicianSpecialization_PhysicianId,
-    DROP CONSTRAINT FK_PhysicianSpecialization_SpecializationId;
+ALTER TABLE physician_specializations
+    DROP CONSTRAINT fk_physician_specializations_physician_id,
+    DROP CONSTRAINT fk_physician_specializations_specialization_id;
