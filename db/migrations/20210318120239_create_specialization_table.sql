@@ -1,8 +1,8 @@
 -- migrate:up
 CREATE TABLE specializations (
-    id INT PRIMARY KEY,
-    unique_code uuid,
-    specialization_name varchar(100)
+    id uuid PRIMARY KEY,
+    specialization_name varchar(100),
+    CONSTRAINT UK_specializations_specialization_name UNIQUE (specialization_name)
 );
 
 -- migrate:down
