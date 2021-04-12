@@ -1,7 +1,18 @@
 package physician_specialization
 
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
 type PhysicianSpecialization struct {
-	Id               uint `gorm:"primaryKey"`
+	Id               string `gorm:column:"id";`
 	PhysicianId      string
-	SpecializationId uint
+	SpecializationId string
+}
+
+func (ps PhysicianSpecialization) BeforeCreate(tx *gorm.DB) {
+	ps.Id = uuid.NewString()
+
+	return
 }

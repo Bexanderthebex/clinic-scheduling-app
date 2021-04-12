@@ -93,20 +93,22 @@ func main() {
 		v := routes.NewValidator()
 		validationErrors := v.Struct(physicianSpecializationsReqBody)
 
-		fieldErrors := validationErrors.(validator.ValidationErrors)
-		if len(validationErrors.(validator.ValidationErrors)) > 0 {
-			validationError := &routes.RouteValidationError{
-				ValidationError: fieldErrors[0],
-			}
+		if validationErrors != nil {
+			fieldErrors := validationErrors.(validator.ValidationErrors)
+			if len(validationErrors.(validator.ValidationErrors)) > 0 {
+				validationError := &routes.RouteValidationError{
+					ValidationError: fieldErrors[0],
+				}
 
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
-			return
+				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
+				return
+			}
 		}
 
 		physicianSpecializations := make([]*specialization.Specialization, 0, len(physicianSpecializationsReqBody.Specializations))
 		for _, specializationName := range physicianSpecializationsReqBody.Specializations {
 			newSpecialization := &specialization.Specialization{
-				UniqueCode:         uuid.NewString(),
+				Id:                 uuid.NewString(),
 				SpecializationName: specializationName,
 			}
 			physicianSpecializations = append(physicianSpecializations, newSpecialization)
