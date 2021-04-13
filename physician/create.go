@@ -1,7 +1,10 @@
 package physician
 
-import "gorm.io/gorm"
+import (
+	"github.com/Bexanderthebex/clinic-scheduling-app/models"
+	"gorm.io/gorm"
+)
 
-func Create(db *gorm.DB, physician *Physician) {
+func Create(db *gorm.DB, physician *models.Physician) {
 	db.Create(physician)
 }

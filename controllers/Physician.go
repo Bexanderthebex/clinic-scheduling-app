@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/Bexanderthebex/clinic-scheduling-app/physician"
+	"github.com/Bexanderthebex/clinic-scheduling-app/models"
 )
 
-func Create(physician *physician.Physician) {
+func Create(physician *models.Physician) {
 
 }

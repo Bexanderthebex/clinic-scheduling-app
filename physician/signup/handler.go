@@ -1,6 +1,7 @@
 package signup
 
 import (
+	"github.com/Bexanderthebex/clinic-scheduling-app/models"
 	"github.com/Bexanderthebex/clinic-scheduling-app/physician"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -13,12 +14,12 @@ type Request struct {
 }
 
 type Response struct {
-	Data  *physician.Physician
+	Data  *models.Physician
 	Error error
 }
 
 func Signup(db *gorm.DB, req *Request) *Response {
-	newPhysician := &physician.Physician{
+	newPhysician := &models.Physician{
 		Id:         uuid.NewString(),
 		FirstName:  req.FirstName,
 		LastName:   req.LastName,
