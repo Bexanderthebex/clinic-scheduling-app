@@ -1,4 +1,4 @@
-package physician_hospital_affiliation
+package models
 
 import (
 	"time"
