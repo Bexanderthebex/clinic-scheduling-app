@@ -1,24 +1,14 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/Bexanderthebex/clinic-scheduling-app/config"
-	modify_specializations "github.com/Bexanderthebex/clinic-scheduling-app/physician/modify-specializations"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
-	"github.com/Bexanderthebex/clinic-scheduling-app/routes"
 	gin "github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"log"
-	"net/http"
 	"time"
 
 	"github.com/Bexanderthebex/clinic-scheduling-app/routes/physicians"
 )
-
-type PhysicianSpecializationRequestBody struct {
-	PhysicianId     string   `json:"physician_id" validation:"required"`
-	Specializations []string `json:"specializations" validate:"required"`
-}
 
 func main() {
 	errorFindingConfig := config.InitiateConfig()
@@ -42,40 +32,6 @@ func main() {
 	route := gin.Default()
 
 	physicians.Initialize(route, db)
-
-	route.POST("/physicians/specializations", func(c *gin.Context) {
-		jsonData, _ := c.GetRawData()
-		var physicianSpecializationsReqBody PhysicianSpecializationRequestBody
-		json.Unmarshal(jsonData, &physicianSpecializationsReqBody)
-
-		v := routes.NewValidator()
-		validationErrors := v.Struct(physicianSpecializationsReqBody)
-
-		if validationErrors != nil {
-			fieldErrors := validationErrors.(validator.ValidationErrors)
-			if len(validationErrors.(validator.ValidationErrors)) > 0 {
-				validationError := &routes.RouteValidationError{
-					ValidationError: fieldErrors[0],
-				}
-
-				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
-				return
-			}
-		}
-
-		req := &modify_specializations.Request{
-			PhysicianId:     physicianSpecializationsReqBody.PhysicianId,
-			Specializations: physicianSpecializationsReqBody.Specializations,
-		}
-
-		res := modify_specializations.AddSpecializations(db, req)
-
-		if res.Error == nil {
-			c.JSON(http.StatusOK, gin.H{"data": res.Data})
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": res.Error})
-		}
-	})
 
 	route.Run(":5000")
 }
