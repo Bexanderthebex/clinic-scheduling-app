@@ -16,7 +16,9 @@ func (Specialization) TableName() string {
 }
 
 func (s *Specialization) BeforeCreate(tx *gorm.DB) (err error) {
-	s.Id = uuid.NewString()
+	if s.Id == "" {
+		s.Id = uuid.NewString()
+	}
 
 	return
 }
