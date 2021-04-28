@@ -56,8 +56,9 @@ func createPhysician(group *gin.RouterGroup, db *gorm.DB) {
 }
 
 func addSpecializations(group *gin.RouterGroup, db *gorm.DB) {
-	group.POST("/physicians/specializations", func(c *gin.Context) {
+	group.POST("/:physicianId/specializations", func(c *gin.Context) {
 		jsonData, _ := c.GetRawData()
+		physicianId := c.Param("physicianId")
 		var physicianSpecializationsReqBody PhysicianSpecializationRequestBody
 		json.Unmarshal(jsonData, &physicianSpecializationsReqBody)
 
@@ -77,7 +78,7 @@ func addSpecializations(group *gin.RouterGroup, db *gorm.DB) {
 		}
 
 		req := &modify_specializations.Request{
-			PhysicianId:     physicianSpecializationsReqBody.PhysicianId,
+			PhysicianId:     physicianId,
 			Specializations: physicianSpecializationsReqBody.Specializations,
 		}
 

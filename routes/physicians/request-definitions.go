@@ -7,6 +7,5 @@ type PhysicianRequestBody struct {
 }
 
 type PhysicianSpecializationRequestBody struct {
-	PhysicianId     string   `json:"physician_id" validation:"required"`
 	Specializations []string `json:"specializations" validate:"required"`
 }

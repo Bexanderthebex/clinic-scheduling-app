@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-secretsmanager-caching-go/secretcache"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	//"gorm.io/driver/postgres"
 	//"gorm.io/gorm"
@@ -66,7 +67,9 @@ func NewConnection() (*gorm.DB, error) {
 				DSN:                  databaseConfig.GetGormDsnString(),
 				PreferSimpleProtocol: true, // disables implicit prepared statement usage
 			}),
-		&gorm.Config{},
+		&gorm.Config{
+			Logger: logger.Default.LogMode(logger.Info),
+		},
 	)
 }
 
