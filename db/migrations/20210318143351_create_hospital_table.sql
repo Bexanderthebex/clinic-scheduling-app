@@ -5,7 +5,7 @@ CREATE TABLE hospitals (
     city VARCHAR(100),
     address VARCHAR(100),
     lat NUMERIC(10, 8),
-    long NUMERIC(10, 8),
+    long NUMERIC(11, 8),
     logo VARCHAR(300)
 );
 
