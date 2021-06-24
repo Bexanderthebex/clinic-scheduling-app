@@ -20,3 +20,18 @@ func NewValidator() *ginValidator.Validate {
 
 	return validator
 }
+
+func CheckForErrors(request interface{}, validator *ginValidator.Validate) *RouteValidationError {
+	validationErrors := validator.Struct(request)
+
+	if validationErrors != nil {
+		fieldErrors := validationErrors.(ginValidator.ValidationErrors)
+		if len(validationErrors.(ginValidator.ValidationErrors)) > 0 {
+			return &RouteValidationError{
+				ValidationError: fieldErrors[0],
+			}
+		}
+	}
+
+	return nil
+}

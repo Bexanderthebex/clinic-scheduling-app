@@ -7,7 +7,6 @@ import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/physician/signup"
 	"github.com/Bexanderthebex/clinic-scheduling-app/routes"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 	"net/http"
 )
@@ -28,18 +27,11 @@ func createPhysician(group *gin.RouterGroup, db *gorm.DB) {
 		json.Unmarshal(jsonData, &physicianReqBody)
 
 		v := routes.NewValidator()
-		validationErrors := v.Struct(physicianReqBody)
+		validationError := routes.CheckForErrors(physicianReqBody, v)
 
-		if validationErrors != nil {
-			fieldErrors := validationErrors.(validator.ValidationErrors)
-			if len(validationErrors.(validator.ValidationErrors)) > 0 {
-				validationError := &routes.RouteValidationError{
-					ValidationError: fieldErrors[0],
-				}
-
-				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
-				return
-			}
+		if validationError != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
+			return
 		}
 
 		req := &signup.Request{
@@ -65,18 +57,11 @@ func addSpecializations(group *gin.RouterGroup, db *gorm.DB) {
 		json.Unmarshal(jsonData, &physicianSpecializationsReqBody)
 
 		v := routes.NewValidator()
-		validationErrors := v.Struct(physicianSpecializationsReqBody)
+		validationError := routes.CheckForErrors(physicianSpecializationsReqBody, v)
 
-		if validationErrors != nil {
-			fieldErrors := validationErrors.(validator.ValidationErrors)
-			if len(validationErrors.(validator.ValidationErrors)) > 0 {
-				validationError := &routes.RouteValidationError{
-					ValidationError: fieldErrors[0],
-				}
-
-				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
-				return
-			}
+		if validationError != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
+			return
 		}
 
 		req := &modify_specializations.Request{
@@ -89,7 +74,7 @@ func addSpecializations(group *gin.RouterGroup, db *gorm.DB) {
 		if res.Error == nil {
 			c.JSON(http.StatusOK, gin.H{"data": res.Data})
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": res.Error})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": res.Error.Error()})
 		}
 	})
 }
@@ -102,18 +87,11 @@ func addHospitalAffiliations(group *gin.RouterGroup, db *gorm.DB) {
 		json.Unmarshal(jsonData, &createHospitalAffiliations)
 
 		v := routes.NewValidator()
-		validationErrors := v.Struct(createHospitalAffiliations)
+		validationError := routes.CheckForErrors(createHospitalAffiliations, v)
 
-		if validationErrors != nil {
-			fieldErrors := validationErrors.(validator.ValidationErrors)
-			if len(validationErrors.(validator.ValidationErrors)) > 0 {
-				validationError := &routes.RouteValidationError{
-					ValidationError: fieldErrors[0],
-				}
-
-				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
-				return
-			}
+		if validationError != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
+			return
 		}
 
 		req := &add_hospital_affiliations.Request{
@@ -126,7 +104,7 @@ func addHospitalAffiliations(group *gin.RouterGroup, db *gorm.DB) {
 		if res.Error == nil {
 			c.JSON(http.StatusOK, gin.H{"data": res.Data})
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": res.Error})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": res.Error.Error()})
 		}
 	})
 }
