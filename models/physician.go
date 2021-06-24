@@ -6,7 +6,7 @@ type Physician struct {
 	LastName        string            `gorm:column:"last_name"`
 	MiddleName      string            `gorm:column:"middle_name"`
 	Specializations []*Specialization `gorm:"many2many:physician_specializations;"`
-	//Hospitals       []*hospital.Hospital             `gorm:"many2many:PhysicianHospitalAffiliation;"`
+	Hospitals       []*Hospital       `gorm:"many2many:physician_hospitals;"`
 }
 
 type Tabler interface {
