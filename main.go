@@ -22,6 +22,10 @@ func main() {
 		log.Fatal(createSecretsCacheError.Error())
 	}
 	db, _ := repository.NewConnection(secretsCache)
+	_, createSearchCacheError := repository.NewElasticSearchClient(secretsCache)
+	if createSearchCacheError != nil {
+		log.Fatal(createSearchCacheError.Error())
+	}
 
 	sqlDB, _ := db.DB()
 
