@@ -17,7 +17,11 @@ func main() {
 		log.Fatal(errorFindingConfig)
 	}
 
-	db, _ := repository.NewConnection()
+	secretsCache, createSecretsCacheError := repository.GetSecrets()
+	if createSecretsCacheError != nil {
+		log.Fatal(createSecretsCacheError.Error())
+	}
+	db, _ := repository.NewConnection(secretsCache)
 
 	sqlDB, _ := db.DB()
 
