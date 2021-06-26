@@ -27,3 +27,32 @@ func (h *Hospital) BeforeCreate(tx *gorm.DB) (err error) {
 
 	return
 }
+
+func (h Hospital) AsMap() map[string]interface{} {
+	hospitalAsMap := make(map[string]interface{})
+	if h.Id != "" {
+		hospitalAsMap["id"] = h.Id
+	}
+
+	if h.Name != "" {
+		hospitalAsMap["name"] = h.Name
+	}
+
+	if h.City != "" {
+		hospitalAsMap["city"] = h.City
+	}
+
+	if h.Address != "" {
+		hospitalAsMap["address"] = h.Address
+	}
+
+	if h.Lat != 0 {
+		hospitalAsMap["lat"] = h.Lat
+	}
+
+	if h.Long != 0 {
+		hospitalAsMap["long"] = h.Long
+	}
+
+	return hospitalAsMap
+}

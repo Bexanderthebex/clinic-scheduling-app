@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/config"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
+	"github.com/Bexanderthebex/clinic-scheduling-app/routes/hospitals"
 	gin "github.com/gin-gonic/gin"
 	"log"
 	"time"
@@ -32,6 +33,7 @@ func main() {
 	route := gin.Default()
 
 	physicians.Initialize(route, db)
+	hospitals.Initialize(route, db)
 
 	route.Run(":5000")
 }
