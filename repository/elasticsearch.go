@@ -29,6 +29,31 @@ func (es ElasticSearchCache) Find(map[string]interface{}) map[string]interface{}
 	return make(map[string]interface{})
 }
 
+func (es ElasticSearchCache) IndexExists(indexName string) (bool, error) {
+	response, checkIndexExistsError := es.esClient.Indices.Exists([]string{indexName})
+	if checkIndexExistsError != nil {
+		return false, checkIndexExistsError
+	}
+
+	if response.StatusCode == 200 {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func (es ElasticSearchCache) CreateIndex(indexName string) (map[string]interface{}, error) {
+	response, createIndexError := es.esClient.Indices.Create(indexName)
+	if createIndexError != nil {
+		return nil, createIndexError
+	}
+
+	mapResponse := make(map[string]interface{})
+	json.NewDecoder(response.Body).Decode(&mapResponse)
+
+	return mapResponse, createIndexError
+}
+
 func NewElasticSearchClient(secretsCache *secretcache.Cache) (ElasticSearchCache, error) {
 	secrets, errorGettingSSMSecret := secretsCache.GetSecretString(config.GetString("ES_CONFIG_STRING"))
 	if errorGettingSSMSecret != nil {

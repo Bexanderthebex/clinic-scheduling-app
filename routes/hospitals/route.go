@@ -8,10 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
-	"reflect"
 )
 
-var cachePool map[string]interface{}
+var documentCache repository.DocumentCache
 
 func Initialize(route *gin.Engine, db *gorm.DB) {
 	hospitalsRoute := route.Group("/hospitals")
@@ -20,7 +19,7 @@ func Initialize(route *gin.Engine, db *gorm.DB) {
 }
 
 func AddDocumentCache(cache repository.DocumentCache) {
-	cachePool[reflect.TypeOf(cache).Name()] = cache
+	documentCache = cache
 }
 
 func createHospital(group *gin.RouterGroup, db *gorm.DB) {
