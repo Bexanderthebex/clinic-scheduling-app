@@ -3,16 +3,24 @@ package hospitals
 import (
 	"encoding/json"
 	create_hospital "github.com/Bexanderthebex/clinic-scheduling-app/hospital/create-hospital"
+	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
 	"github.com/Bexanderthebex/clinic-scheduling-app/routes"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"reflect"
 )
+
+var cachePool map[string]interface{}
 
 func Initialize(route *gin.Engine, db *gorm.DB) {
 	hospitalsRoute := route.Group("/hospitals")
 
 	createHospital(hospitalsRoute, db)
+}
+
+func AddDocumentCache(cache repository.DocumentCache) {
+	cachePool[reflect.TypeOf(cache).Name()] = cache
 }
 
 func createHospital(group *gin.RouterGroup, db *gorm.DB) {

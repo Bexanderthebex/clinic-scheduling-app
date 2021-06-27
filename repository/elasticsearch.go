@@ -21,10 +21,18 @@ func (e *CreatingNewElasticSearchClientError) Error() string {
 	return fmt.Sprintf("Error initializing ElasticSearch client %s", e.ErrorMessage)
 }
 
-func NewElasticSearchClient(secretsCache *secretcache.Cache) (*elasticsearch.Client, error) {
+type ElasticSearchCache struct {
+	esClient *elasticsearch.Client
+}
+
+func (es ElasticSearchCache) Find(map[string]interface{}) map[string]interface{} {
+	return make(map[string]interface{})
+}
+
+func NewElasticSearchClient(secretsCache *secretcache.Cache) (ElasticSearchCache, error) {
 	secrets, errorGettingSSMSecret := secretsCache.GetSecretString(config.GetString("ES_CONFIG_STRING"))
 	if errorGettingSSMSecret != nil {
-		return nil, &CreatingNewElasticSearchClientError{
+		return ElasticSearchCache{}, &CreatingNewElasticSearchClientError{
 			ErrorMessage: errorGettingSSMSecret.Error(),
 		}
 	}
@@ -32,7 +40,7 @@ func NewElasticSearchClient(secretsCache *secretcache.Cache) (*elasticsearch.Cli
 	appEsConfig := &ElasticSearchConfig{}
 	encodingError := json.Unmarshal([]byte(secrets), appEsConfig)
 	if encodingError != nil {
-		return nil, &CreatingNewElasticSearchClientError{
+		return ElasticSearchCache{}, &CreatingNewElasticSearchClientError{
 			ErrorMessage: encodingError.Error(),
 		}
 	}
@@ -40,5 +48,10 @@ func NewElasticSearchClient(secretsCache *secretcache.Cache) (*elasticsearch.Cli
 		Addresses: strings.Split(appEsConfig.Addresses, ","),
 	}
 
-	return elasticsearch.NewClient(esConfig)
+	esClient, createSearchCacheError := elasticsearch.NewClient(esConfig)
+	if createSearchCacheError != nil {
+		return ElasticSearchCache{}, createSearchCacheError
+	}
+
+	return ElasticSearchCache{esClient: esClient}, nil
 }

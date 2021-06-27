@@ -22,9 +22,9 @@ func main() {
 		log.Fatal(createSecretsCacheError.Error())
 	}
 	db, _ := repository.NewConnection(secretsCache)
-	_, createSearchCacheError := repository.NewElasticSearchClient(secretsCache)
-	if createSearchCacheError != nil {
-		log.Fatal(createSearchCacheError.Error())
+	SearchCache, createSeachCacheError := repository.NewElasticSearchClient(secretsCache)
+	if createSecretsCacheError != nil {
+		log.Fatal(createSeachCacheError)
 	}
 
 	sqlDB, _ := db.DB()
@@ -42,6 +42,7 @@ func main() {
 
 	physicians.Initialize(route, db)
 	hospitals.Initialize(route, db)
+	hospitals.AddDocumentCache(SearchCache)
 
 	route.Run(":5000")
 }
