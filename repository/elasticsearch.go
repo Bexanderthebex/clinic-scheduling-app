@@ -38,8 +38,28 @@ type ElasticSearchCache struct {
 	index    string
 }
 
-func (es ElasticSearchCache) Find(map[string]interface{}) map[string]interface{} {
-	return make(map[string]interface{})
+// TODO: Add pagination
+// TODO: Add more structure to the return type
+func (es ElasticSearchCache) Find(searchConditions map[string]interface{}, indexName string) (map[string]interface{}, error) {
+	body := new(bytes.Buffer)
+	json.NewEncoder(body).Encode(searchConditions)
+
+	res, searchError := es.esClient.Search(
+		es.esClient.Search.WithContext(context.Background()),
+		es.esClient.Search.WithBody(body),
+		es.esClient.Search.WithIndex(indexName),
+		es.esClient.Search.WithPretty(),
+	)
+
+	if searchError != nil {
+		return nil, searchError
+	}
+
+	searchResponse := make(map[string]interface{})
+	log.Println(res.String())
+	json.NewDecoder(res.Body).Decode(&searchResponse)
+
+	return searchResponse, nil
 }
 
 func (es ElasticSearchCache) IndexExists(indexName string) (bool, error) {
