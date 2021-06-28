@@ -2,36 +2,47 @@ package crons
 
 import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/config"
+	"github.com/Bexanderthebex/clinic-scheduling-app/hospital"
 	"github.com/Bexanderthebex/clinic-scheduling-app/models"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
+	"gorm.io/gorm"
 	"log"
 )
 
 type HospitalSearchIndexer struct {
-	store         interface{}
+	store         *gorm.DB
 	hospitalModel models.Hospital
 	documentCache repository.DocumentCache
 }
 
 func (h *HospitalSearchIndexer) Run() {
-	// Check if the index already exists
-
-	exists, headIndexError := h.documentCache.IndexExists(config.GetString("ES_HOSPITAL_INDEX_NAME"))
+	elasticSearchHopistalIndexName := config.GetString("ES_HOSPITAL_INDEX_NAME")
+	exists, headIndexError := h.documentCache.IndexExists(elasticSearchHopistalIndexName)
 	if headIndexError != nil {
+		log.Println(headIndexError)
 		panic(headIndexError)
 	}
 
 	if !exists {
-		createIndexResult, createIndexError := h.documentCache.CreateIndex(config.GetString("ES_HOSPITAL_INDEX_NAME"))
+		createIndexResult, createIndexError := h.documentCache.CreateIndex(elasticSearchHopistalIndexName)
 		if createIndexError != nil {
 			panic(createIndexError)
 		}
 		log.Println(createIndexResult)
 	}
 
+	hospitals, findAllHospitalsError := hospital.FindAll(h.store)
+	if findAllHospitalsError != nil {
+		panic(findAllHospitalsError)
+	}
+
+	for _, hospital := range hospitals {
+		h.documentCache = h.documentCache.AddBulkIndexAction(hospital.AsMap(), elasticSearchHopistalIndexName)
+	}
+	h.documentCache.ExecuteBulkActions()
 }
 
-func (h *HospitalSearchIndexer) Initialize(db interface{}, hospitalModel models.Hospital) {
+func (h *HospitalSearchIndexer) Initialize(db *gorm.DB, hospitalModel models.Hospital) {
 	h.store = db
 	h.hospitalModel = hospitalModel
 }

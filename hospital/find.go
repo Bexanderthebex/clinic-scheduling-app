@@ -12,7 +12,16 @@ func FindById(db *gorm.DB, hospitalID string) *models.Hospital {
 }
 
 func FindOne(db *gorm.DB, conditions map[string]interface{}) *models.Hospital {
-	hospitals := &models.Hospital{}
-	db.Where(conditions).First(hospitals)
-	return hospitals
+	hospital := &models.Hospital{}
+	db.Where(conditions).First(hospital)
+	return hospital
+}
+
+func FindAll(db *gorm.DB) ([]*models.Hospital, error) {
+	hospitals := make([]*models.Hospital, 0)
+	result := db.Find(&hospitals)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return hospitals, nil
 }
