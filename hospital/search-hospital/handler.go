@@ -43,6 +43,13 @@ func SearchHospital(db *gorm.DB, searchCache repository.DocumentCache, request *
 		}
 
 		nearestHospitalSearchMatch := &models.Hospital{}
+		total := int(searchRes["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
+		if total == 0 {
+			return &Response{
+				Data:  nil,
+				Error: nil,
+			}
+		}
 		// TODO: Clean this one up
 		jsonString, jsonStringConversionErr := json.Marshal(searchRes["hits"].(map[string]interface{})["hits"].([]interface{})[0].(map[string]interface{})["_source"])
 		if jsonStringConversionErr != nil {
