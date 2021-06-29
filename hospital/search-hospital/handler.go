@@ -5,6 +5,7 @@ import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/config"
 	"github.com/Bexanderthebex/clinic-scheduling-app/hospital"
 	"github.com/Bexanderthebex/clinic-scheduling-app/models"
+	"github.com/Bexanderthebex/clinic-scheduling-app/models/elasticsearch"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
 	"gorm.io/gorm"
 )
@@ -35,16 +36,16 @@ func SearchHospital(db *gorm.DB, searchCache repository.DocumentCache, request *
 			}
 		}
 
+		esr := elasticsearch.ElasticSearchResponse{Response: searchRes}
 		nearestHospitalSearchMatch := &models.Hospital{}
-		total := int(searchRes["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
-		if total == 0 {
+		if esr.TotalHits() == 0 {
 			return &Response{
 				Data:  nil,
 				Error: nil,
 			}
 		}
-		// TODO: Clean this one up
-		jsonString, jsonStringConversionErr := json.Marshal(searchRes["hits"].(map[string]interface{})["hits"].([]interface{})[0].(map[string]interface{})["_source"])
+
+		jsonString, jsonStringConversionErr := json.Marshal(esr.First())
 		if jsonStringConversionErr != nil {
 			return &Response{
 				Error: jsonStringConversionErr,
