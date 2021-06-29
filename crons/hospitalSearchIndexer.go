@@ -3,7 +3,6 @@ package crons
 import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/config"
 	"github.com/Bexanderthebex/clinic-scheduling-app/hospital"
-	"github.com/Bexanderthebex/clinic-scheduling-app/models"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
 	"gorm.io/gorm"
 	"log"
@@ -11,11 +10,11 @@ import (
 
 type HospitalSearchIndexer struct {
 	store         *gorm.DB
-	hospitalModel models.Hospital
+	hospitalModel interface{}
 	documentCache repository.DocumentCache
 }
 
-func (h *HospitalSearchIndexer) Run() {
+func (h HospitalSearchIndexer) Run() {
 	elasticSearchHopistalIndexName := config.GetString("ES_HOSPITAL_INDEX_NAME")
 	exists, headIndexError := h.documentCache.IndexExists(elasticSearchHopistalIndexName)
 	if headIndexError != nil {
@@ -42,7 +41,7 @@ func (h *HospitalSearchIndexer) Run() {
 	h.documentCache.ExecuteBulkActions()
 }
 
-func (h *HospitalSearchIndexer) Initialize(db *gorm.DB, hospitalModel models.Hospital) {
+func (h *HospitalSearchIndexer) Initialize(db *gorm.DB, hospitalModel interface{}) {
 	h.store = db
 	h.hospitalModel = hospitalModel
 }

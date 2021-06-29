@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/config"
 	"github.com/Bexanderthebex/clinic-scheduling-app/crons"
-	"github.com/Bexanderthebex/clinic-scheduling-app/models"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
 	"github.com/Bexanderthebex/clinic-scheduling-app/routes/hospitals"
 	gin "github.com/gin-gonic/gin"
+	"github.com/robfig/cron/v3"
 	"log"
 	"time"
 
@@ -46,10 +46,17 @@ func main() {
 	hospitals.Initialize(route, db)
 	hospitals.AddDocumentCache(SearchCache)
 
-	h := crons.HospitalSearchIndexer{}
-	h.Initialize(db, models.Hospital{})
-	h.AddDocumentCache(SearchCache)
-	h.Run()
+	cronList := crons.Spawn(db, SearchCache)
+
+	c := cron.New()
+	for _, cronObj := range cronList {
+		c.AddFunc("@every 10s", cronObj.Run)
+	}
+
+	// Run CRON jobs on a different go routine
+	go func() {
+		c.Start()
+	}()
 
 	route.Run(":5000")
 }
