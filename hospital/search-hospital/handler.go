@@ -30,7 +30,10 @@ func SearchHospital(db *gorm.DB, searchCache repository.DocumentCache, request *
 		matchHospitalQuery := map[string]interface{}{
 			"query": map[string]interface{}{
 				"match": map[string]interface{}{
-					"name": request.HospitalName,
+					"name": map[string]interface{}{
+						"query":     request.HospitalName,
+						"fuzziness": "AUTO",
+					},
 				},
 			},
 		}
