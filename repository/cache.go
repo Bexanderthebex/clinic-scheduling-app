@@ -7,6 +7,7 @@ type DocumentCache interface {
 	CreateIndex(string) (map[string]interface{}, error)
 	ExecuteBulkActions()
 	AddBulkIndexAction(map[string]interface{}, string) DocumentCache
+	CreateQueryStatement(string, interface{}) map[string]interface{}
 }
 
 // For Key value type cache

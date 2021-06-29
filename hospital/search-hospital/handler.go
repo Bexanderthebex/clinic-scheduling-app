@@ -7,7 +7,6 @@ import (
 	"github.com/Bexanderthebex/clinic-scheduling-app/models"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
 	"gorm.io/gorm"
-	"log"
 )
 
 type Request struct {
@@ -27,17 +26,8 @@ func SearchHospital(db *gorm.DB, searchCache repository.DocumentCache, request *
 			Data: findHospitalResult,
 		}
 	} else {
-		matchHospitalQuery := map[string]interface{}{
-			"query": map[string]interface{}{
-				"match": map[string]interface{}{
-					"name": map[string]interface{}{
-						"query":     request.HospitalName,
-						"fuzziness": "AUTO",
-					},
-				},
-			},
-		}
-		log.Println(matchHospitalQuery)
+		matchHospitalQuery := searchCache.CreateQueryStatement("name", request.HospitalName)
+
 		searchRes, searcErr := searchCache.Find(matchHospitalQuery, config.GetString("ES_HOSPITAL_INDEX_NAME"))
 		if searcErr != nil {
 			return &Response{

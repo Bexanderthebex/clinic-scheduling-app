@@ -129,6 +129,19 @@ func (es ElasticSearchCache) AddBulkIndexAction(item map[string]interface{}, ind
 	return es
 }
 
+func (es ElasticSearchCache) CreateQueryStatement(key string, value interface{}) map[string]interface{} {
+	return map[string]interface{}{
+		"query": map[string]interface{}{
+			"match": map[string]interface{}{
+				key: map[string]interface{}{
+					"query":     value,
+					"fuzziness": "AUTO",
+				},
+			},
+		},
+	}
+}
+
 func NewElasticSearchClient(secretsCache *secretcache.Cache) (ElasticSearchCache, error) {
 	secrets, errorGettingSSMSecret := secretsCache.GetSecretString(config.GetString("ES_CONFIG_STRING"))
 	if errorGettingSSMSecret != nil {
