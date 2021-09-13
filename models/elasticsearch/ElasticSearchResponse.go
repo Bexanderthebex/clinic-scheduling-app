@@ -5,7 +5,7 @@ type ElasticSearchResponse struct {
 }
 
 func (esr ElasticSearchResponse) TotalHits() int64 {
-	return int64(esr.Response["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
+	return int64(esr.Response["hits"].(map[string]interface{})["total"].(float64))
 }
 
 func (esr ElasticSearchResponse) First() interface{} {

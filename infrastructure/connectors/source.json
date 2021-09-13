@@ -1,0 +1,21 @@
+{
+  "name": "clinica-db-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "admin",
+    "database.password": "password",
+    "database.server.id": "184054",
+    "database.dbname": "clinica",
+    "database.server.name": "dbserver1",
+    "database.whitelist": "clinica",
+    "database.history.kafka.bootstrap.servers": "kafka:9092",
+    "database.history.kafka.topic": "schema-changes.clinica",
+    "transforms": "route",
+    "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+    "transforms.route.replacement": "$3"
+  }
+}

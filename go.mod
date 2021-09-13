@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/aws/aws-sdk-go v1.38.1
 	github.com/aws/aws-secretsmanager-caching-go v1.1.0
+	github.com/confluentinc/confluent-kafka-go v1.7.0 // indirect
 	github.com/elastic/go-elasticsearch/v7 v7.13.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gin-gonic/gin v1.6.3
@@ -30,6 +31,7 @@ require (
 	golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4 // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.7.0 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/postgres v1.0.8
