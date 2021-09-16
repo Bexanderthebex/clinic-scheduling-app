@@ -1,1 +1,2 @@
-# clinic-scheduling-app
+# ClinicA
+

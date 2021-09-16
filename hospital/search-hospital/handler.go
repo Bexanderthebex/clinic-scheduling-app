@@ -16,7 +16,7 @@ type Request struct {
 }
 
 type Response struct {
-	Data  *models.Hospital
+	Data  []models.Hospital
 	Error error
 }
 
@@ -24,7 +24,9 @@ func SearchHospital(db *gorm.DB, searchCache repository.DocumentCache, request *
 	if request.HospitalID != "" {
 		findHospitalResult := hospital.FindById(db, request.HospitalID)
 		return &Response{
-			Data: findHospitalResult,
+			Data: []models.Hospital{
+				*findHospitalResult,
+			},
 		}
 	} else {
 		matchHospitalQuery := searchCache.CreateQueryStatement("name", request.HospitalName)
@@ -37,7 +39,6 @@ func SearchHospital(db *gorm.DB, searchCache repository.DocumentCache, request *
 		}
 
 		esr := elasticsearch.ElasticSearchResponse{Response: searchRes}
-		nearestHospitalSearchMatch := &models.Hospital{}
 		if esr.TotalHits() == 0 {
 			return &Response{
 				Data:  nil,
@@ -45,14 +46,16 @@ func SearchHospital(db *gorm.DB, searchCache repository.DocumentCache, request *
 			}
 		}
 
-		jsonString, jsonStringConversionErr := json.Marshal(esr.First())
+		jsonString, jsonStringConversionErr := json.Marshal(esr.Paginate(5))
 		if jsonStringConversionErr != nil {
 			return &Response{
 				Error: jsonStringConversionErr,
 			}
 		}
 
-		json.Unmarshal(jsonString, nearestHospitalSearchMatch)
+		var nearestHospitalSearchMatch []models.Hospital
+
+		json.Unmarshal(jsonString, &nearestHospitalSearchMatch)
 		return &Response{
 			Data:  nearestHospitalSearchMatch,
 			Error: nil,

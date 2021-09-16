@@ -2,7 +2,7 @@ build:
 	go build .
 
 start-infra:
-	cd infrastructure && docker-compose up
+	cd infrastructure && docker compose -f docker-compose.es.yaml up
 
 start:
 	make build

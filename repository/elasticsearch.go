@@ -139,6 +139,9 @@ func (es ElasticSearchCache) CreateQueryStatement(key string, value interface{})
 				},
 			},
 		},
+		"sort": []string{
+			"_score",
+		},
 	}
 }
 
