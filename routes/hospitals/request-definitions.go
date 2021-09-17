@@ -8,7 +8,6 @@ type CreateHospitalReq struct {
 	Longitude    float64 `json:"longitude" validate:""`
 }
 
-type FindHospitalReq struct {
-	ID           string `json:"id" validate:"required_without_all=HospitalName"`
-	HospitalName string `json:"name" validate:"required_without_all=ID"`
+type SearchHospitalReq struct {
+	HospitalName string `json:"name" validate:"required=ID"`
 }

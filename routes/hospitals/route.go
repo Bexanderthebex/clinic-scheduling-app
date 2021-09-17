@@ -56,9 +56,9 @@ func createHospital(group *gin.RouterGroup, db *gorm.DB) {
 }
 
 func searchHospital(group *gin.RouterGroup, db *gorm.DB) {
-	group.GET("", func(c *gin.Context) {
+	group.GET("/_search", func(c *gin.Context) {
 		jsonData, _ := c.GetRawData()
-		var findHospitalReq FindHospitalReq
+		var findHospitalReq SearchHospitalReq
 		json.Unmarshal(jsonData, &findHospitalReq)
 
 		v := routes.NewValidator()
@@ -69,11 +69,8 @@ func searchHospital(group *gin.RouterGroup, db *gorm.DB) {
 			return
 		}
 
-		findHospital := &search_hospital.Request{}
-		if findHospitalReq.ID != "" {
-			findHospital.HospitalID = findHospitalReq.ID
-		} else {
-			findHospital.HospitalName = findHospitalReq.HospitalName
+		findHospital := &search_hospital.Request{
+			HospitalName: findHospitalReq.HospitalName,
 		}
 
 		res := search_hospital.SearchHospital(db, documentCache, findHospital)
