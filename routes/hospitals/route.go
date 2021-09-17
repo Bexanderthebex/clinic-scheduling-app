@@ -3,6 +3,7 @@ package hospitals
 import (
 	"encoding/json"
 	create_hospital "github.com/Bexanderthebex/clinic-scheduling-app/hospital/create-hospital"
+	get_hospital "github.com/Bexanderthebex/clinic-scheduling-app/hospital/get-hospital"
 	search_hospital "github.com/Bexanderthebex/clinic-scheduling-app/hospital/search-hospital"
 	"github.com/Bexanderthebex/clinic-scheduling-app/repository"
 	"github.com/Bexanderthebex/clinic-scheduling-app/routes"
@@ -17,6 +18,7 @@ func Initialize(route *gin.Engine, db *gorm.DB) {
 	hospitalsRoute := route.Group("/hospitals")
 
 	createHospital(hospitalsRoute, db)
+	getHospital(hospitalsRoute, db)
 	searchHospital(hospitalsRoute, db)
 }
 
@@ -55,8 +57,36 @@ func createHospital(group *gin.RouterGroup, db *gorm.DB) {
 	})
 }
 
+func getHospital(group *gin.RouterGroup, db *gorm.DB) {
+	group.GET("/:hospital_id", func(c *gin.Context) {
+		hospitalId := c.Param("hospital_id")
+		params := map[string]interface{}{
+			"hospital_id": hospitalId,
+		}
+		jsonParams, _ := json.Marshal(params)
+		var getHospitalReq GetHospitalReq
+		json.Unmarshal(jsonParams, &getHospitalReq)
+
+		v := routes.NewValidator()
+		validationError := routes.CheckForErrors(getHospitalReq, v)
+
+		if validationError != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": validationError.BuildResponseError()})
+			return
+		}
+
+		res := get_hospital.GetHospital(db, &get_hospital.Request{HospitalId: hospitalId})
+
+		if res.Error == nil {
+			c.JSON(http.StatusOK, gin.H{"data": res.Data})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": res.Error.Error()})
+		}
+	})
+}
+
 func searchHospital(group *gin.RouterGroup, db *gorm.DB) {
-	group.GET("/_search", func(c *gin.Context) {
+	group.GET("", func(c *gin.Context) {
 		jsonData, _ := c.GetRawData()
 		var findHospitalReq SearchHospitalReq
 		json.Unmarshal(jsonData, &findHospitalReq)

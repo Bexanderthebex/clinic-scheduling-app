@@ -11,3 +11,7 @@ type CreateHospitalReq struct {
 type SearchHospitalReq struct {
 	HospitalName string `json:"name" validate:"required=ID"`
 }
+
+type GetHospitalReq struct {
+	HospitalId string `json:"hospital_id"`
+}
